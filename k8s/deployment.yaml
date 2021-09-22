@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: egertes-deployment
+  labels:
+    app: egertes-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: egertes
+  template:
+    metadata:
+      labels:
+        app: egertes
+    spec:
+      containers:
+      - name: egertes
+        image: death5hadow/egertes:v1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          failureThreshold: 1
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          failureThreshold: 30
+          periodSeconds: 5
+        ports:
+        - containerPort: 8080
